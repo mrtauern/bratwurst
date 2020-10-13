@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+*.properties
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -31,3 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+mysql-connector-java-5.1.47.jar
