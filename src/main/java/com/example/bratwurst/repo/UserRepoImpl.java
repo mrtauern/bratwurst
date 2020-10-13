@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.logging.Logger;
 
 @Repository
-public class HomeRepoImpl {
+public class UserRepoImpl implements UserRepo {
 
-    Logger log = Logger.getLogger(HomeRepoImpl.class.getName());
+    Logger log = Logger.getLogger(UserRepoImpl.class.getName());
 }
