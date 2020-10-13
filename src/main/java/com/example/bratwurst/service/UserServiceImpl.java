@@ -1,4 +1,4 @@
 package com.example.bratwurst.service;
 
-public interface HomeService {
+public class UserServiceImpl {
 }
