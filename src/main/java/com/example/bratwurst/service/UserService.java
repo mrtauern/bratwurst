@@ -1,5 +1,7 @@
 package com.example.bratwurst.service;
 
-public interface UserService {
+import org.springframework.stereotype.Service;
 
+@Service
+public interface UserService {
 }
