@@ -1,6 +1,6 @@
 package com.example.bratwurst.controller;
 
-import com.example.bratwurst.service.HomeService;
+import com.example.bratwurst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ public class HomeController {
     Logger log = Logger.getLogger(HomeController.class.getName());
 
     @Autowired
-    HomeService homeService;
+    UserService userService;
 
     @GetMapping()
     public String index(Model model){
