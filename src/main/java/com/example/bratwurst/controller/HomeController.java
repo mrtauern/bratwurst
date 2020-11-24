@@ -32,7 +32,6 @@ public class HomeController {
         return "index";
     }
 
-<<<<<<< HEAD
     @GetMapping("/home")
     public String home(){
 
@@ -46,10 +45,12 @@ public class HomeController {
     }
 
     @GetMapping("/notifications")
-    public String notifications(){
+    public String notifications() {
 
         return "notifications";
-=======
+
+    }
+
     @GetMapping("/")
     public String login(){
         return "index";
@@ -75,6 +76,6 @@ public class HomeController {
 
             return "redirect:/";
         }
->>>>>>> master
+
     }
 }
