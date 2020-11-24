@@ -1,10 +1,12 @@
 package com.example.bratwurst.controller;
 
+import com.example.bratwurst.model.User;
 import com.example.bratwurst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.logging.Logger;
 
@@ -19,10 +21,13 @@ public class HomeController {
     @Autowired
     UserService userService;
 
-    @GetMapping()
-    public String index(Model model){
+    @GetMapping("/{username}/{password}")
+    public String index(@PathVariable String username,@PathVariable String password){
         log.info("index called");
-
+        User user = userService.getLogin(username,password);
+        if (user == null){
+            System.out.println("error");
+        }
         return "index";
     }
 }
