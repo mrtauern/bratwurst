@@ -30,4 +30,22 @@ public class HomeController {
         }
         return "index";
     }
+
+    @GetMapping("/home")
+    public String home(){
+
+        return "home";
+    }
+
+    @GetMapping("/messages")
+    public String messages(){
+
+        return "messages";
+    }
+
+    @GetMapping("/notifications")
+    public String notifications(){
+
+        return "notifications";
+    }
 }
