@@ -1,39 +1,28 @@
-package com.example.bratwurst.model;
+package com.example.bratwurst.ViewModel;
 
-public class User {
+public class UserViewModel {
 
-    int iduser;
     String first_name;
     String last_name;
     int age;
     String gender;
     String username;
-    String salt;
     String password;
     String email;
     String profile_picture;
 
-    public User(String first_name, String last_name, int age, String gender, String username, String salt, String password, String email, String profile_picture) {
+    public UserViewModel(String first_name, String last_name, int age, String gender, String username, String password, String email, String profile_picture) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.age = age;
         this.gender = gender;
         this.username = username;
-        this.salt = salt;
         this.password = password;
         this.email = email;
         this.profile_picture = profile_picture;
     }
 
-    public User(){}
-
-    public int getIduser(){
-        return iduser;
-    }
-
-    public void setIduser(int iduser){
-        this.iduser = iduser;
-    }
+    public UserViewModel(){}
 
     public String getFirst_name() {
         return first_name;
@@ -53,10 +42,6 @@ public class User {
 
     public String getUsername() {
         return username;
-    }
-
-    public String getSalt() {
-        return salt;
     }
 
     public String getPassword() {
@@ -91,10 +76,6 @@ public class User {
         this.username = username;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -115,10 +96,12 @@ public class User {
                 ", age=" + age +
                 ", gender='" + gender + '\'' +
                 ", username='" + username + '\'' +
-                ", salt='" + salt + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", profile_picture='" + profile_picture + '\'' +
                 '}';
     }
+
+
+
 }

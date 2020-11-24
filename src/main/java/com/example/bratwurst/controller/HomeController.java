@@ -16,13 +16,11 @@ public class HomeController {
 
     Logger log = Logger.getLogger(HomeController.class.getName());
 
-    @Autowired
-    UserService userService;
-
-    @GetMapping()
+    @GetMapping
     public String index(Model model){
-        log.info("index called");
+        log.info("--- index called ---");
 
-        return "index";
+        return "login";
     }
+
 }

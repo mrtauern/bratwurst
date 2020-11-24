@@ -1,0 +1,15 @@
+<div th:fragment="navbar" xmlns:th="http://www.w3.org/1999/xhtml">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+        <!-- Links -->
+        <ul class="navbar-nav">
+            <li class="nav-item" th:classappend="(${isLogin} ? 'active' : '') + (${isLoggedin} ? 'd-none' : '')" >
+                <a class="nav-link" href="/login"><span class="fas fa-key"></span> Login</a>
+            </li>
+        </ul>
+
+        <span class="ml-auto">
+            <a href="/logout" class="btn btn-primary btn-sm" th:classappend="${isLoggedin} ? '' : 'd-none'"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </span>
+    </nav>
+</div>
