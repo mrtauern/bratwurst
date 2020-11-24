@@ -5,9 +5,10 @@ import com.example.bratwurst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.logging.Logger;
 
 @Controller
@@ -31,6 +32,7 @@ public class HomeController {
         return "index";
     }
 
+<<<<<<< HEAD
     @GetMapping("/home")
     public String home(){
 
@@ -47,5 +49,32 @@ public class HomeController {
     public String notifications(){
 
         return "notifications";
+=======
+    @GetMapping("/")
+    public String login(){
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model){
+        User user = userService.getLogin(username, password);
+
+        if (user == null){
+
+            String error = "Username or password was incorrect!";
+
+            System.out.println(error);
+
+            model.addAttribute("error", "logError");
+
+            return "index";
+
+        } else{
+
+            session.setAttribute("login", user);
+
+            return "redirect:/";
+        }
+>>>>>>> master
     }
 }

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body onload="init()">
+<h1>You are now chatting with someone</h1>
+<div id="messages">
+
+</div>
+<input type="text" id="messageInput" onkeypress="sendMessage(event)"/>
+<input type="file" name="file" id="file" />
+<button onclick="uploadFile()">send fil</button>
+
+</body>
+<script th:inline="javascript">
+/*<![CDATA[*/
+    function init()
+    {
+        loadMessages();
+
+        setInterval(loadMessages, 1000);   
+    }
+
+    function uploadFile()
+    {
+        console.log("uploading");
+        let sender = /*[[${sender}]]*/ -1;
+        let receiver = /*[[${receiver}]]*/ -1;
+
+        var fileInput = document.getElementById('file');
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "http://localhost:8080/api/messages/new/file/" + sender + "/" + receiver, true);
+        xhr.send(formData);
+    }
+
+    function sendMessage(e)
+    {
+        if(e.keyCode == 13)
+        {
+            let sender = /*[[${sender}]]*/ -1;
+            let receiver = /*[[${receiver}]]*/ -1;
+            let msg = document.getElementById("messageInput").value;
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', "http://localhost:8080/api/messages/new");
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({sender: sender, receiver: receiver, content: msg, file: false}));
+
+            document.getElementById("messageInput").value = "";
+        }
+    }
+
+    function loadMessages()
+    {
+        console.log("loading shiet");
+        var xhr = new XMLHttpRequest();
+        let sender = /*[[${sender}]]*/ -1;
+        let receiver = /*[[${receiver}]]*/ -1;
+        xhr.onload = function()
+        {
+            if(xhr.status >= 200 && xhr.status < 300)
+            {
+                //document.getElementById("messages").innerHTML = "";
+                
+                var html = "";
+                var json = JSON.parse(xhr.response);
+
+                for(let i = 0; i < json.length; i++)
+                {
+                    if(json[i].file)
+                    {
+                        let link = "http://localhost:8080/" + json[i].content;
+                        let strArray = json[i].content.split("/");
+                        let filename = strArray[strArray.length - 1];
+                        html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a></div>";
+                    }
+                    else
+                    {
+                        html += "<div><h3>" + json[i].senderUsername + ": </h3> " + json[i].content + "</div>";
+                    }
+                }
+
+                document.getElementById("messages").innerHTML = html;
+            }
+            else
+            {
+                console.log(xhr.response);
+            }
+        }
+        xhr.open('GET', 'http://localhost:8080/api/messages/' + sender + '/' + receiver);
+        xhr.send();
+    }
+/*]]>*/
+</script>
+</html>

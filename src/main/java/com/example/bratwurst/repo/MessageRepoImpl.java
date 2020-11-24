@@ -18,7 +18,10 @@ public class MessageRepoImpl implements MessageRepo
     @Override
     public List<Message> getConversation(int sender, int receiver)
     {
-        String sql = "select * from messages where sender = ? or receiver = ? and sender = ? or receiver = ? order by timestamp asc";
+        String sql = "select m.id, m.sender, m.receiver, m.content, m.file, m.timestamp, u1.username as sender_username, u2.username as receiver_username from messages m \n" +
+                "join users u1 on m.sender = u1.id \n" +
+                "join users u2 on m.receiver = u2.id \n" +
+                "where (sender = ? or receiver = ?) and (sender = ? or receiver = ?) order by timestamp asc";
 
         List<Message> messages = jdbc.query(sql, resultSet ->
         {
@@ -33,6 +36,9 @@ public class MessageRepoImpl implements MessageRepo
                 msg.setReceiver(resultSet.getInt("receiver"));
                 msg.setSender(resultSet.getInt("sender"));
                 msg.setTimestamp(resultSet.getDate("timestamp").toString());
+
+                msg.setReceiverUsername(resultSet.getString("receiver_username"));
+                msg.setSenderUsername(resultSet.getString("sender_username"));
 
                 msgs.add(msg);
             }
