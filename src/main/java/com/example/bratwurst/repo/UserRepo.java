@@ -7,4 +7,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepo {
 
     User getLogin(String username, String password);
+
+    User addUser(User user);
+
+    User findLogin(String username, String email);
 }

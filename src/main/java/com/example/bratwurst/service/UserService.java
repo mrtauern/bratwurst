@@ -7,4 +7,7 @@ import org.springframework.stereotype.Service;
 public interface UserService {
 
     User getLogin(String username, String password);
+
+    User addUser(User user, String confirm_password);
+
 }
