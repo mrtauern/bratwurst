@@ -5,7 +5,7 @@
     * {box-sizing: border-box;}
 
     /* Full-width input fields */
-    input[type=text], input[type=password] {
+    input[type=text], input[type=password], input[type=email] {
         width: 100%;
         padding: 15px;
         margin: 5px 0 22px 0;
@@ -15,7 +15,7 @@
     }
 
     /* Add a background color when the inputs get focus */
-    input[type=text]:focus, input[type=password]:focus {
+    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
         background-color: #ddd;
         outline: none;
     }
@@ -143,8 +143,12 @@
             </div>
             <input type="email" placeholder="Enter Email" th:name="email" required>
 
-            <label><b>Gender</b></label>
-            <input type="text" placeholder="Enter Gender" th:name="gender" required>
+            <label><b>Gender</b></label><br>
+            <select type="text" placeholder="Gender" th:name="gender" id="gender" style="min-width: 100px" required>
+                <option value="" selected disabled hidden>Select</option>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+            </select><br><br><br>
 
             <label><b>Username</b></label>
             <div th:if="${username_taken_error}" class="alert alert-danger alert-dismissible">
