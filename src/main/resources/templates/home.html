@@ -63,22 +63,20 @@
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
                     <h4 class="w3-center">
-                        <!--th:text="${users.first_name} + ' ' + ${users.last_name}" -->
-                    Test Testesen</h4>
+                        <span th:text="${user.username}"></span>
+                    </h4>
                     <p class="w3-center"><img src="https://www.w3schools.com/images/picture.jpg" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture"></p>
                     <hr>
-                    <p><i class="fa fa-building fa-fw w3-margin-right w3-text-theme"></i> Copenhagen
-                        <!--                        <span th:text="${users.age}"></span>-->
+                    <p><i class="fa fa-building fa-fw w3-margin-right w3-text-theme"></i>
+                        <span th:text="${user.city}"></span>
                     </p>
-                    <p><i class="fa fa-flag fa-fw w3-margin-right w3-text-theme"></i> Denmark
-                        <!--                        <span th:text="${users.age}"></span>-->
+                    <p><i class="fa fa-flag fa-fw w3-margin-right w3-text-theme"></i>
+                        <span th:text="${user.country}"></span>
                     </p>
-                    <p><i class="fa fa-female fa-fw w3-margin-right w3-text-theme"></i>Female</p>
-<!--                    <p th:if="${users.gender == 'Female'}"><i class="fa fa-female fa-fw w3-margin-right w3-text-theme"></i><span th:text="${users.gender}"></span></p>-->
-<!--                    <p th:if="${users.gender == 'Male'}"><i class="fa fa-male fa-fw w3-margin-right w3-text-theme"></i><span th:text="${users.gender}"></span></p>-->
-<!--                    <p th:if="${users.gender == 'Other'}"><i class="fa fa-genderless fa-fw w3-margin-right w3-text-theme"></i><span th:text="${users.gender}"></span></p>-->
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> 26
-                        <!--                        <span th:text="${users.age}"></span>-->
+                        <p th:if="${!user.gender}"><i class="fa fa-female fa-fw w3-margin-right w3-text-theme"></i><span>Female</span></p>
+                        <p th:if="${user.gender}"><i class="fa fa-male fa-fw w3-margin-right w3-text-theme"></i><span>Male</span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i>
+                        <span th:text="${user.age}"></span>
                     </p>
                 </div>
             </div>

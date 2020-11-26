@@ -36,14 +36,17 @@ public class HomeController {
     public String home(HttpSession session, Model model){
 
         if (session.getAttribute("login") != null){
-            model.addAttribute("users", userService.getUsers());
+            User u = (User)session.getAttribute("login");
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            model.addAttribute("users", userService.getUsers(u.getId()));
             return "home";
         }else {
 
             model.addAttribute("notLoggedIn", "notLoggedIn");
             return "index";
         }
-
     }
 
     @GetMapping("/messages")
@@ -67,6 +70,7 @@ public class HomeController {
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model){
+
         User user = userService.getLogin(username, password);
 
         if (user == null){
@@ -124,7 +128,7 @@ public class HomeController {
            System.out.println("Username already taken");
        }else {
            session.setAttribute("login", user);
-           return "redirect:/home";
+           return "redirect:/";
        }
            return "signup";
     }
