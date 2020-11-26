@@ -9,7 +9,8 @@ import java.util.List;
 public interface UserRepo {
 
     User getLogin(String username, String password);
-    List<User> getUsers();
+    List<User> getUsers(int id);
     User addUser(User user);
     User findLogin(String username, String email);
+    User getUserById(int id);
 }

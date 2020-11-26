@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
     <style>
         body {font-family: Arial, Helvetica, sans-serif;}
         form {border: 3px solid #f1f1f1;}
@@ -81,8 +82,9 @@
         <input type="text" placeholder="Enter Username" th:name="username" required>
 
         <label><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" th:name="password" required>
+        <input type="password" id="pwd" placeholder="Enter Password" th:name="password" required>
 
+<!--        <button onclick="mySubmit(this)" type="submit">Login</button>-->
         <button type="submit">Login</button>
         <label>
             <input type="checkbox" checked="checked" name="remember"> Remember me
@@ -107,6 +109,16 @@
 
 
 <body>
+
+<!--<script>-->
+<!--    function mySubmit(obj) {-->
+<!--        var pwdObj = document.getElementById('pwd');-->
+<!--        var hashObj = new jsSHA("SHA-512", "TEXT", {numRounds: 1});-->
+<!--        hashObj.update(pwdObj.value);-->
+<!--        var hash = hashObj.getHash("HEX");-->
+<!--        pwdObj.value = hash;-->
+<!--    }-->
+<!--</script>-->
 
 </body>
 </html>

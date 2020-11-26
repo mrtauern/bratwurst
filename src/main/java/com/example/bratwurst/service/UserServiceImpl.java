@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public List<User> getUsers() {
-        return userRepo.getUsers();
+    public List<User> getUsers(int id) {
+        return userRepo.getUsers(id);
     }
 
 
@@ -66,5 +66,10 @@ public class UserServiceImpl implements UserService {
 
             return null;
         }
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return userRepo.getUserById(id);
     }
 }
