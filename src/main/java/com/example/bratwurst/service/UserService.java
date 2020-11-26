@@ -9,7 +9,8 @@ import java.util.List;
 public interface UserService {
 
     User getLogin(String username, String password);
-    List<User> getUsers();
+    List<User> getUsers(int id);
     User addUser(User user, String confirm_password);
+    User getUserById(int id);
 
 }
