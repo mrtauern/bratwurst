@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:href="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 class="text-danger"><span class="fas fa-exclamation-triangle"></span>Advarsel</h1>
+
+    <h3 th:text="${'Er du sikker på at du vil Slette ' + file.filename + '?'}"></h3>
+
+    <form th:method="POST" th:action="@{/deleteFile}" th:object="${file}">
+        <input type="hidden" th:field="${file.id}" required/>
+
+        <input class="btn btn-light" type="button" value="Cancel" onclick="location.href='/files';"/>
+
+        <input class="btn btn-danger" type="submit" value="Delete"/>
+    </form>
+</body>
+</html>

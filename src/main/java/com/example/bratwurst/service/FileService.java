@@ -10,4 +10,5 @@ public interface FileService
     public Resource loadFile(int sender, int receiver, String filename);
     public String saveFile(String path, MultipartFile file);
     public void saveFileWithMessage(int sender, int receiver, MultipartFile file);
+    public void deleteFile(int sender, int receiver, String filename);
 }

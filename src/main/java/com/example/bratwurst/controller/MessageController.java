@@ -41,4 +41,10 @@ public class MessageController
         fileService.saveFileWithMessage(sender, receiver, file);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PostMapping("delete/file/{sender}/{receiver}/{filename}")
+    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam String filename){
+        fileService.deleteFile(sender, receiver, filename);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
