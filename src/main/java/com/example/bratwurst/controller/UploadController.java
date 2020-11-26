@@ -83,15 +83,15 @@ public class UploadController {
 
     @GetMapping("/files")
     public String tilbud (Model model){
-        log.info("offerPage is called");
+        log.info("Files is called");
         model.addAttribute("files", uploadService.getFiles(1));
 
         return FILES;
     }
 
     @GetMapping("/deleteFile/{id}")
-    public String deleteOffer (@PathVariable Integer id, Model model){
-        log.info("Delete file med  id: " + id + "?");
+    public String deleteFile (@PathVariable("id") Integer id, Model model){
+        log.info("Delete file getmapping med id " + id + " called");
 
         model.addAttribute("file", uploadService.getFile(id));
         /*String offerName = adminService.findOffer(id).getOfferName();
@@ -100,9 +100,9 @@ public class UploadController {
         return DELETEFILE;
     }
 
-    @PutMapping("/deleteFile")
-    public String deleteOffer (@ModelAttribute File file, Model model){
-        log.info("delete confirmed deleting offer " + file.getId());
+    @PostMapping("/deleteFile")
+    public String deleteFile (@ModelAttribute File file, Model model){
+        log.info("Delete file putmapping med id " + file.getId() + " called");
         int id = file.getId();
 
         uploadService.deleteFile(id);

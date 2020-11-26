@@ -9,12 +9,12 @@
 
     <h3 th:text="${'Er du sikker på at du vil Slette ' + file.filename + '?'}"></h3>
 
-    <form th:method="Put" th:action="@{/deleteFile}" th:object="${file}">
-        <input type="hidden" th:field="${file.id}"/>
+    <form th:method="POST" th:action="@{/deleteFile}" th:object="${file}">
+        <input type="hidden" th:field="${file.id}" required/>
 
-        <input class="btn btn-light" type="button" value="Annuller" onclick="location.href='/files';"/>
+        <input class="btn btn-light" type="button" value="Cancel" onclick="location.href='/files';"/>
 
-        <input class="btn btn-danger" type="submit" value="Slet"/>
+        <input class="btn btn-danger" type="submit" value="Delete"/>
     </form>
 </body>
 </html>
