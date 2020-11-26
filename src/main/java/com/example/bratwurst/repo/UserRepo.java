@@ -10,4 +10,6 @@ public interface UserRepo {
 
     User getLogin(String username, String password);
     List<User> getUsers();
+    User addUser(User user);
+    User findLogin(String username, String email);
 }

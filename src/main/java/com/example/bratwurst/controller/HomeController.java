@@ -33,11 +33,17 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home(Model model){
+    public String home(HttpSession session, Model model){
 
-        model.addAttribute("users", userService.getUsers());
+        if (session.getAttribute("login") != null){
+            model.addAttribute("users", userService.getUsers());
+            return "home";
+        }else {
 
-        return "home";
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
+
     }
 
     @GetMapping("/messages")
@@ -52,6 +58,8 @@ public class HomeController {
         return "notifications";
     }
 
+
+    // LOGIN
     @GetMapping("/")
     public String login(){
         return "index";
@@ -78,4 +86,47 @@ public class HomeController {
             return "redirect:/home";
         }
     }
+
+    // LOGOUT
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+
+        log.info("logout called... ");
+
+        session.removeAttribute("login");
+
+        log.info("session terminated");
+
+        return "index";
+    }
+
+    // SIGN UP
+
+    @GetMapping("/signup")
+    public String signup(){
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@ModelAttribute User user, @RequestParam String psw_repeat, HttpSession session, Model model){
+
+       User theUser = userService.addUser(user, psw_repeat);
+
+       if (theUser == null){
+           model.addAttribute("password_different_error", "true");
+           System.out.println("passwords are different");
+       }else if (theUser.getUsername() == null){
+           model.addAttribute("email_in_use_error", "true");
+           System.out.println("email is already registered");
+       }else if (theUser.getEmail() == null){
+           model.addAttribute("username_taken_error", "true");
+           System.out.println("Username already taken");
+       }else {
+           session.setAttribute("login", user);
+           return "redirect:/home";
+       }
+           return "signup";
+    }
+
 }
