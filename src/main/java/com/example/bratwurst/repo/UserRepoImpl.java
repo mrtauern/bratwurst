@@ -8,8 +8,11 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Repository
@@ -34,5 +37,31 @@ public class UserRepoImpl implements UserRepo {
             return null;
         }, username, password);
         return u;
+    }
+
+    public List<User> getUsers(){
+
+        List<User> userList = new ArrayList<User>();
+
+        String sql = "SELECT username, first_name, last_name, country FROM users";
+
+        return this.jdbc.query(sql, new ResultSetExtractor<java.util.List<User>>() {
+
+            @Override
+            public java.util.List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+                while (rs.next()) {
+                    String username = rs.getString("username");
+                    String first_name = rs.getString("first_name");
+                    String last_name = rs.getString("last_name");
+                    String country = rs.getString("country");
+
+                    User u = new User(username, first_name, last_name, country);
+
+                    userList.add(u);
+                }
+                return userList;
+            }
+        });
     }
 }

@@ -28,6 +28,14 @@ public class User {
         this.profile_picture = profile_picture;
     }
 
+    //Get Users at homepage
+    public User(String username, String first_name, String last_name, String country) {
+        this.username = username;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.country = country;
+    }
+
     public User() {
     }
 

@@ -32,9 +32,10 @@ public class HomeController {
         return "index";
     }
 
-<<<<<<< HEAD
     @GetMapping("/home")
-    public String home(){
+    public String home(Model model){
+
+        model.addAttribute("users", userService.getUsers());
 
         return "home";
     }
@@ -46,10 +47,11 @@ public class HomeController {
     }
 
     @GetMapping("/notifications")
-    public String notifications(){
+    public String notifications() {
 
         return "notifications";
-=======
+    }
+
     @GetMapping("/")
     public String login(){
         return "index";
@@ -67,14 +69,13 @@ public class HomeController {
 
             model.addAttribute("error", "logError");
 
-            return "index";
+            return "redirect:/";
 
         } else{
 
             session.setAttribute("login", user);
 
-            return "redirect:/";
+            return "redirect:/home";
         }
->>>>>>> master
     }
 }

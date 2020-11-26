@@ -9,6 +9,22 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
     html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+    .button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        background-color: #4CAF50;
+    }
+
+    .button:hover {
+        background-color: #3e8e41;
+    }
 </style>
 <body class="w3-theme-l5">
 
@@ -73,9 +89,16 @@
 
         <!-- Middle Column -->
         <div class="w3-col m8">
-            <h3>Other users will be shown here..</h3>
-            <!-- End Middle Column -->
+            <div th:each="users : ${users}">
+                <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+                    <img src="https://www.w3schools.com/images/picture.jpg" alt="pic" class="w3-left w3-circle w3-margin-right" style="width:80px">
+                    <button class="w3-right w3-green button">Chat</button>
+                    <h4 th:text="${users.username}"></h4><br>
+                </div>
+            </div>
         </div>
+            <!-- End Middle Column -->
+    </div>
 
         <!-- End Grid -->
     </div>
