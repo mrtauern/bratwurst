@@ -75,10 +75,11 @@
                 {
                     if(json[i].file)
                     {
-                        let link = "http://localhost:8080/" + json[i].content;
+                        let link = "http://localhost:8080/" + json[i].content; 
                         let strArray = json[i].content.split("/");
                         let filename = strArray[strArray.length - 1];
-                        html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a></div>";
+                        let deleteLink = "http://localhost:8080/api/messages/delete/file/" + sender + "/" + receiver + "/" + filename;
+                        html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a> <a href=\"" + deleteLink + "\">delete</a></div>";
                     }
                     else
                     {
