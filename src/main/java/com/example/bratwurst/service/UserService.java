@@ -11,5 +11,6 @@ public interface UserService {
     User getLogin(String username, String password);
     List<User> getUsers();
     User addUser(User user, String confirm_password);
+    boolean passwordStrong(String password);
 
 }

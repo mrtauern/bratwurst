@@ -153,8 +153,8 @@
             <input type="text" placeholder="Enter Username" th:name="username" required>
 
             <label><b>Password</b></label>
-            <div th:if="${password_different_error}" class="alert alert-danger alert-dismissible">
-                <strong>Error!</strong> password doesnt match!
+            <div th:if="${password_not_strong}" class="alert alert-danger alert-dismissible">
+                <strong>Error!</strong> password weak! must contain: uppercase, lowercase, special charater and be atleast 8 characters long
             </div>
             <input type="password" placeholder="Enter Password" th:name="password" required>
 

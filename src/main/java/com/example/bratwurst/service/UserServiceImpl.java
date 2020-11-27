@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,6 +41,12 @@ public class UserServiceImpl implements UserService {
 
         String current_pass = user.getPassword();
 
+        boolean strongPassword = passwordStrong(user.getPassword());
+
+        if (strongPassword != true){
+            return null;
+        }
+
         // if the two passwords match
         if (current_pass.equals(confirm_password)){
 
@@ -65,6 +73,46 @@ public class UserServiceImpl implements UserService {
         } else{
 
             return null;
+        }
+    }
+
+    @Override
+    public boolean passwordStrong(String password) {
+
+        boolean haveUpper = false;
+        boolean haveLower = false;
+        boolean length = false;
+        boolean specialCharacter = false;
+
+        // Checks for lowercase and upercase
+        for( int i = 0; i< password.length(); i++){
+
+            char ch = password.charAt(i);
+
+            if (Character.isUpperCase(ch)){
+                haveUpper = true;
+            }else if(Character.isLowerCase(ch)){
+                haveLower = true;
+            }
+        }
+        // Checks for length
+        if (password.length() > 7) {
+            length = true;
+        }
+
+        // Checks for special character
+        Pattern p = Pattern.compile("[A-Za-z0-9]");
+        Matcher m = p.matcher(password);
+        boolean b = m.find();
+        if (b){
+            specialCharacter = true;
+        }
+
+        if (haveUpper && haveLower && length && specialCharacter){
+            return true;
+        }else{
+
+            return false;
         }
     }
 }

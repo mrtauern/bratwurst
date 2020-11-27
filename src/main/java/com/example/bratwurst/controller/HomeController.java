@@ -111,9 +111,14 @@ public class HomeController {
     @PostMapping("/signup")
     public String signup(@ModelAttribute User user, @RequestParam String psw_repeat, HttpSession session, Model model){
 
+       boolean strongPassword = userService.passwordStrong(user.getPassword());
+
        User theUser = userService.addUser(user, psw_repeat);
 
-       if (theUser == null){
+       if (strongPassword != true) {
+           model.addAttribute("password_not_strong", "true");
+           System.out.println("password is not strong");
+       }else if (theUser == null){
            model.addAttribute("password_different_error", "true");
            System.out.println("passwords are different");
        }else if (theUser.getUsername() == null){
