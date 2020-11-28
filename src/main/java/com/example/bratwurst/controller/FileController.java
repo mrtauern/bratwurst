@@ -26,7 +26,7 @@ public class FileController
         {
             User user = (User) session.getAttribute("login");
 
-            if (receiver == user.getId() || sender == user.getId())
+            if (receiver != user.getId() && sender != user.getId())
             {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -36,6 +36,7 @@ public class FileController
         }
         catch (NullPointerException e)
         {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

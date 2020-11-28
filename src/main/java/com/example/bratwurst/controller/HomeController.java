@@ -42,6 +42,8 @@ public class HomeController {
         if (session.getAttribute("login") != null){
             User u = (User)session.getAttribute("login");
 
+            System.out.println(u);
+
             model.addAttribute("user", userService.getUserById(u.getId()));
 
             model.addAttribute("users", userService.getUsers(u.getId()));
@@ -138,7 +140,6 @@ public class HomeController {
                model.addAttribute("username_taken_error", "true");
                System.out.println("Username already taken");
            }else {
-               //session.setAttribute("login", user);
                return "redirect:/";
            }
            return "signup";
