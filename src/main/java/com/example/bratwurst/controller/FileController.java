@@ -28,7 +28,7 @@ public class FileController
 
             if (receiver != user.getId() && sender != user.getId())
             {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             Resource resource = fileService.loadFile(sender, receiver, filename);
 
@@ -37,7 +37,7 @@ public class FileController
         catch (NullPointerException e)
         {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

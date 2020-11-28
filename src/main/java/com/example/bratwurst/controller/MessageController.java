@@ -31,14 +31,14 @@ public class MessageController
             User user = (User) session.getAttribute("login");
             if(sender != user.getId() || user.getId() == receiver)
             {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             }
             return new ResponseEntity<>(messageService.getConversation(sender, receiver), HttpStatus.OK);
         }
         catch (NullPointerException e)
         {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
