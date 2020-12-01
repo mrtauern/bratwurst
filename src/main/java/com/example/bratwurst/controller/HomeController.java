@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.SubscribeRequest;
 import com.example.bratwurst.model.User;
+import com.example.bratwurst.service.SanitizingService;
 import com.example.bratwurst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,28 +35,26 @@ public class HomeController {
     private String email;
     private User user;
 
-    @GetMapping("/{username}/{password}")
-    public String index(@PathVariable String username,@PathVariable String password){
-        log.info("index called");
-        User user = userService.getLogin(username,password);
-        if (user == null){
-            System.out.println("error");
-        }
-        return "index";
-    }
+    @Autowired
+    SanitizingService sanitizingService;
 
     @GetMapping("/home")
     public String home(HttpSession session, Model model){
 
         if (session.getAttribute("login") != null){
-            model.addAttribute("users", userService.getUsers());
+            User u = (User)session.getAttribute("login");
+
+            System.out.println(u);
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            model.addAttribute("users", userService.getUsers(u.getId()));
             return "home";
         }else {
 
             model.addAttribute("notLoggedIn", "notLoggedIn");
             return "index";
         }
-
     }
 
     @GetMapping("/messages")
@@ -78,7 +77,9 @@ public class HomeController {
     }
 
     @PostMapping("/login")
+
     public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) throws JSONException {
+
         User user = userService.getLogin(username, password);
 
         if (user == null){
@@ -129,6 +130,17 @@ public class HomeController {
 
        User theUser = userService.addUser(user, psw_repeat);
 
+        if(theUser != null)
+        {
+            theUser.setUsername(sanitizingService.sanitizeString(theUser.getUsername()));
+            theUser.setCity(sanitizingService.sanitizeString(theUser.getCity()));
+            theUser.setCountry(sanitizingService.sanitizeString(theUser.getCountry()));
+            theUser.setEmail(sanitizingService.sanitizeString(theUser.getEmail()));
+            theUser.setFirst_name(sanitizingService.sanitizeString(theUser.getFirst_name()));
+            theUser.setLast_name(sanitizingService.sanitizeString(theUser.getLast_name()));
+
+        }
+
        if (strongPassword != true) {
            model.addAttribute("password_not_strong", "true");
            System.out.println("password is not strong");
@@ -148,7 +160,8 @@ public class HomeController {
            return "welcome";
        }
            return "signup";
-    }
+       }
+
 
     @GetMapping("/setPolicy")
     public String setPolicy() throws JSONException {
@@ -168,5 +181,4 @@ public class HomeController {
             return "two_factor_auth";
         }
     }
-
 }

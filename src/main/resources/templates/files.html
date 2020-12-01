@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:href="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1><span class=""></span> Tilbud</h1>
+
+<br>
+
+<table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th>id</th>
+        <th>Filename</th>
+        <th>Upload time</th>
+        <th>User id</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="active" th:each="file : ${files}">
+        <td th:text="${file.id}" ></td>
+        <td th:text="${file.filename}" ></td>
+        <td th:text="${file.upload_time}"></td>
+        <td th:text="${file.user}" /></td>
+        <td>
+            <a th:href="${'src/main/resources/static/upload/' + file.filename}" class="btn btn-light btn-sm">
+                <span class="far fa-eye"></span> Show
+            </a>
+            <a th:href="${'deleteFile/' + file.id}" class="btn btn-danger btn-sm">
+                <span class="fas fa-trash-alt"></span> Delete
+            </a>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<a href="/upload">
+    <button class="btn btn-success"><span class="fas fa-plus"></span> Upload new file</button>
+</a>
+
+<img src="../static/upload/bratwurst_78921049.jpg" th:src="${'/upload/bratwurst_78921049.jpg'}" class="smallImg"/>
+</body>
+</html>

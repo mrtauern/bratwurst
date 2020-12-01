@@ -15,8 +15,9 @@ public interface UserService {
     void subscribeToTopic(String email) throws JSONException;
     void setPolicyFilter(String email) throws JSONException;
     User getLogin(String username, String password);
-    List<User> getUsers();
+    List<User> getUsers(int id);
     User addUser(User user, String confirm_password);
     boolean passwordStrong(String password);
+    User getUserById(int id);
 
 }
