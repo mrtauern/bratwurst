@@ -157,7 +157,7 @@ public class HomeController {
            userService.subscribeToTopic(user.getEmail());
            this.email = user.getEmail();
            // userService.setPolicyFilter(user.getEmail());
-           return "welcome";
+           return "Welcome";
        }
            return "signup";
        }
