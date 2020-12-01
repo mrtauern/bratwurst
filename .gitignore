@@ -21,6 +21,8 @@ target/
 
 *.properties
 
+MyConfig.java
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
