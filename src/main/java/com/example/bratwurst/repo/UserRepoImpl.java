@@ -109,7 +109,7 @@ public class UserRepoImpl implements UserRepo {
         String generatedString = new String(salt, Charset.forName("UTF-8"));
 
         String sql = "INSERT INTO users Values (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
-        jdbc.update(sql, user.getUsername(), hash, salt, user.getFirst_name(),
+        jdbc.update(sql, user.getUsername(), hash, generatedString, user.getFirst_name(),
                          user.getLast_name(), user.getCountry(), user.getCity(), user.getAge(),
                          user.getEmail(), user.isGender());
         return user;
