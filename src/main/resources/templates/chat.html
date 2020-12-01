@@ -56,11 +56,14 @@
         }
     }
 
-    function deleteFile(url)
+    let deleteUrl = "";
+
+    function deleteFile()
     {
-        xhr.open('POST', url);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', deleteUrl);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send();
+        xhr.send({});
     }
 
     function loadMessages()
@@ -85,8 +88,8 @@
                         let link = "http://localhost:8080" + json[i].content; 
                         let strArray = json[i].content.split("/");
                         let filename = strArray[strArray.length - 1];
-                        let deleteLink = "http://localhost:8080/api/messages/delete/file" + sender + "/" + receiver + "/" + filename;
-                        html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a> <button onclick=\"deleteFile(" + deleteLink + ")\">delete</button></div>";
+                        deleteUrl = "http://localhost:8080/api/messages/delete/file/" + sender + "/" + receiver + "/" + filename;
+                        html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a> <button onclick=\"deleteFile()\">delete</button></div>";
                     }
                     else
                     {

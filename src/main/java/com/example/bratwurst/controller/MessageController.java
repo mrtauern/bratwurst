@@ -68,7 +68,7 @@ public class MessageController
         try
         {
             User user = (User) session.getAttribute("login");
-            if (sender != user.getId() || user.getId() == receiver)
+            if (receiver != user.getId() && sender != user.getId())
             {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -82,8 +82,20 @@ public class MessageController
     }
 
     @PostMapping("delete/file/{sender}/{receiver}/{filename}")
-    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam String filename){
-        fileService.deleteFile(sender, receiver, filename);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @PathVariable String filename, HttpSession session){
+        try
+        {
+            User user = (User) session.getAttribute("login");
+            if (sender != user.getId() || user.getId() == receiver)
+            {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            fileService.deleteFile(sender, receiver, filename);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (NullPointerException e)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
