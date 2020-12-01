@@ -11,10 +11,11 @@ public class User {
    private String country;
    private String city;
    private int age;
+   private String email;
    private boolean gender;
    private String profile_picture;
 
-    public User(int id, String username, String password, String salt, String first_name, String last_name, String country, String city, int age, boolean gender, String profile_picture) {
+    public User(int id, String username, String password, String salt, String first_name, String last_name, String country, String city, int age, String email, boolean gender, String profile_picture) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -24,8 +25,17 @@ public class User {
         this.country = country;
         this.city = city;
         this.age = age;
+        this.email = email;
         this.gender = gender;
         this.profile_picture = profile_picture;
+    }
+
+    //Get Users at homepage
+    public User(String username, String first_name, String last_name, String country) {
+        this.username = username;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.country = country;
     }
 
     public User() {
@@ -101,6 +111,14 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public boolean isGender() {
