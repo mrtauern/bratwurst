@@ -76,26 +76,24 @@ public class UserRepoImpl implements UserRepo {
 
         List<User> userList = new ArrayList<User>();
 
-        String sql = "SELECT username, first_name, last_name, country FROM users " +
+        String sql = "SELECT id, username, first_name, last_name, country FROM users " +
                 "WHERE id != ?";
 
-        return this.jdbc.query(sql, new ResultSetExtractor<java.util.List<User>>() {
+        return this.jdbc.query(sql, rs ->
+        {
+            while (rs.next()) {
+                int userId = rs.getInt("id");
+                String username = rs.getString("username");
+                String first_name = rs.getString("first_name");
+                String last_name = rs.getString("last_name");
+                String country = rs.getString("country");
 
-            @Override
-            public java.util.List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                User u = new User(username, first_name, last_name, country);
+                u.setId(userId);
 
-                while (rs.next()) {
-                    String username = rs.getString("username");
-                    String first_name = rs.getString("first_name");
-                    String last_name = rs.getString("last_name");
-                    String country = rs.getString("country");
-
-                    User u = new User(username, first_name, last_name, country);
-
-                    userList.add(u);
-                }
-                return userList;
+                userList.add(u);
             }
+            return userList;
         },id);
     }
 

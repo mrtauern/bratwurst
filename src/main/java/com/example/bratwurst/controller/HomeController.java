@@ -1,6 +1,7 @@
 package com.example.bratwurst.controller;
 
 import com.example.bratwurst.model.User;
+import com.example.bratwurst.service.SanitizingService;
 import com.example.bratwurst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ public class HomeController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    SanitizingService sanitizingService;
+
     @GetMapping("/{username}/{password}")
     public String index(@PathVariable String username,@PathVariable String password){
         log.info("index called");
@@ -37,6 +41,8 @@ public class HomeController {
 
         if (session.getAttribute("login") != null){
             User u = (User)session.getAttribute("login");
+
+            System.out.println(u);
 
             model.addAttribute("user", userService.getUserById(u.getId()));
 
@@ -115,22 +121,34 @@ public class HomeController {
     @PostMapping("/signup")
     public String signup(@ModelAttribute User user, @RequestParam String psw_repeat, HttpSession session, Model model){
 
+
        User theUser = userService.addUser(user, psw_repeat);
 
-       if (theUser == null){
+       if(theUser != null)
+       {
+           theUser.setUsername(sanitizingService.sanitizeString(theUser.getUsername()));
+           theUser.setCity(sanitizingService.sanitizeString(theUser.getCity()));
+           theUser.setCountry(sanitizingService.sanitizeString(theUser.getCountry()));
+           theUser.setEmail(sanitizingService.sanitizeString(theUser.getEmail()));
+           theUser.setFirst_name(sanitizingService.sanitizeString(theUser.getFirst_name()));
+           theUser.setLast_name(sanitizingService.sanitizeString(theUser.getLast_name()));
+
+           if (theUser.getUsername() == null){
+               model.addAttribute("email_in_use_error", "true");
+               System.out.println("email is already registered");
+           }else if (theUser.getEmail() == null){
+               model.addAttribute("username_taken_error", "true");
+               System.out.println("Username already taken");
+           }else {
+               return "redirect:/";
+           }
+           return "signup";
+       }
+       else
+       {
            model.addAttribute("password_different_error", "true");
            System.out.println("passwords are different");
-       }else if (theUser.getUsername() == null){
-           model.addAttribute("email_in_use_error", "true");
-           System.out.println("email is already registered");
-       }else if (theUser.getEmail() == null){
-           model.addAttribute("username_taken_error", "true");
-           System.out.println("Username already taken");
-       }else {
-           session.setAttribute("login", user);
-           return "redirect:/";
-       }
            return "signup";
+       }
     }
-
 }
