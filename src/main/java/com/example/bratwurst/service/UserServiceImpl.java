@@ -1,22 +1,117 @@
 package com.example.bratwurst.service;
 
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.bratwurst.model.User;
 import com.example.bratwurst.repo.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+// @EnableAutoConfiguration
 public class UserServiceImpl implements UserService {
 
     Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    AmazonSNS amazonSNS;
+
+    private int authCode;
+
+    private String topicArn = "arn:aws:sns:eu-west-1:966879952819:bratwurst-two-factor-auth";
+
+    @Override
+    public boolean validateAuthCode(int inputCode) {
+
+        if (inputCode == this.authCode){
+
+            return true;
+        }else {
+
+            return false;
+        }
+    }
+
+    @Override
+    public void publishMessage(String email) throws JSONException {
+
+        Random rand = new Random();
+        int authCodeInt = rand.nextInt(100000);
+
+        this.authCode = authCodeInt;
+
+        PublishRequest publishRequest = new PublishRequest(topicArn, "your code is: " + authCode, "Auth code");
+
+        Map<String, MessageAttributeValue> messageAttributeValueMap = new HashMap<>();
+
+        messageAttributeValueMap.put("email", new MessageAttributeValue().withDataType("String").withStringValue(email.toLowerCase()));
+
+        publishRequest.withMessageAttributes(messageAttributeValueMap);
+
+        amazonSNS.publish(publishRequest);
+    }
+
+    @Override
+    public void subscribeToTopic(String email) throws JSONException {
+
+        SubscribeRequest subscribeRequest = new SubscribeRequest(topicArn, "email", email.toLowerCase());
+
+        amazonSNS.subscribe(subscribeRequest);
+
+        // setPolicyFilter(email);
+
+    }
+
+    @Override
+    public void setPolicyFilter(String email) throws JSONException {
+
+        String[] s = {email.toLowerCase()};
+
+        JSONObject jo = new JSONObject();
+
+        jo.put("email", s);
+
+        String filterP = jo.toString();
+
+        ListSubscriptionsByTopicRequest listSubscriptionsByTopicRequest = new ListSubscriptionsByTopicRequest(topicArn);
+
+        ListSubscriptionsByTopicResult list = amazonSNS.listSubscriptionsByTopic(listSubscriptionsByTopicRequest);
+
+        List<Subscription> subArnList = list.getSubscriptions();
+
+        for (int i = 0; i < subArnList.size(); i++){
+
+            Subscription subArn = subArnList.get(i);
+
+            if (subArn.getEndpoint().equals(email.toLowerCase())){
+
+                String subArnValue = subArn.getSubscriptionArn();
+
+                SetSubscriptionAttributesRequest request = new SetSubscriptionAttributesRequest(subArnValue, "FilterPolicy", jo.toString());
+
+                amazonSNS.setSubscriptionAttributes(request);
+
+                break;
+            }
+        }
+
+    }
+
 
     @Override
     public User getLogin(String username, String password) {
@@ -115,4 +210,6 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+
 }

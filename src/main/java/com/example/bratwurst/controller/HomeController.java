@@ -1,8 +1,16 @@
 package com.example.bratwurst.controller;
 
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.PublishRequest;
+import org.json.JSONException;
+import org.springframework.context.annotation.Bean;
+
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.SubscribeRequest;
 import com.example.bratwurst.model.User;
 import com.example.bratwurst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.util.logging.Logger;
 
 @Controller
+// @EnableAutoConfiguration
 public class HomeController {
 
     public HomeController() {
@@ -21,6 +30,9 @@ public class HomeController {
 
     @Autowired
     UserService userService;
+
+    private String email;
+    private User user;
 
     @GetMapping("/{username}/{password}")
     public String index(@PathVariable String username,@PathVariable String password){
@@ -66,7 +78,7 @@ public class HomeController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model){
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) throws JSONException {
         User user = userService.getLogin(username, password);
 
         if (user == null){
@@ -81,9 +93,11 @@ public class HomeController {
 
         } else{
 
-            session.setAttribute("login", user);
+            userService.publishMessage(user.getEmail());
 
-            return "redirect:/home";
+            this.user = user;
+
+            return "two_factor_auth";
         }
     }
 
@@ -109,7 +123,7 @@ public class HomeController {
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute User user, @RequestParam String psw_repeat, HttpSession session, Model model){
+    public String signup(@ModelAttribute User user, @RequestParam String psw_repeat, HttpSession session, Model model) throws JSONException {
 
        boolean strongPassword = userService.passwordStrong(user.getPassword());
 
@@ -128,10 +142,31 @@ public class HomeController {
            model.addAttribute("username_taken_error", "true");
            System.out.println("Username already taken");
        }else {
-           session.setAttribute("login", user);
-           return "redirect:/home";
+           userService.subscribeToTopic(user.getEmail());
+           this.email = user.getEmail();
+           // userService.setPolicyFilter(user.getEmail());
+           return "welcome";
        }
            return "signup";
+    }
+
+    @GetMapping("/setPolicy")
+    public String setPolicy() throws JSONException {
+        userService.setPolicyFilter(this.email);
+        return "index";
+    }
+
+    @PostMapping("/Auth_code")
+    public String sendSNS(@RequestParam int code, HttpSession session) throws JSONException {
+        boolean isValid = userService.validateAuthCode(code);
+
+        if (isValid){
+            session.setAttribute("login", this.user);
+            return "redirect:/home";
+        }else {
+
+            return "two_factor_auth";
+        }
     }
 
 }

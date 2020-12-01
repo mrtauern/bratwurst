@@ -1,5 +1,6 @@
 package com.example.bratwurst.repo;
 
+import com.amazonaws.services.sns.AmazonSNS;
 import com.example.bratwurst.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -27,11 +28,12 @@ public class UserRepoImpl implements UserRepo {
     JdbcTemplate jdbc;
 
     public User getLogin(String username, String password){
-        String sql = "SELECT id FROM users WHERE username = ? and password = ?";
+        String sql = "SELECT id, email FROM users WHERE username = ? and password = ?";
         User u = this.jdbc.query(sql, resultSet -> {
               User user = new User();
               while (resultSet.next()){
                   user.setId(resultSet.getInt("id"));
+                  user.setEmail(resultSet.getString("email"));
                   return user;
               }
             return null;
