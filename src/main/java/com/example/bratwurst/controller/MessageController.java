@@ -23,6 +23,7 @@ public class MessageController
     @Autowired
     private FileService fileService;
 
+    @CrossOrigin()
     @GetMapping("/{sender}/{receiver}")
     public ResponseEntity<List<Message>> getConversation(@PathVariable int sender, @PathVariable int receiver, HttpSession session)
     {
@@ -42,6 +43,7 @@ public class MessageController
         }
     }
 
+    @CrossOrigin()
     @PostMapping("/new")
     public ResponseEntity postMessage(@RequestBody Message message, HttpSession session)
     {
@@ -62,6 +64,7 @@ public class MessageController
         }
     }
 
+    @CrossOrigin()
     @PostMapping("/new/file/{sender}/{receiver}")
     public ResponseEntity uploadFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam MultipartFile file, HttpSession session)
     {
@@ -81,6 +84,7 @@ public class MessageController
         }
     }
 
+    @CrossOrigin()
     @PostMapping("delete/file/{sender}/{receiver}/{filename}")
     public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @PathVariable String filename, HttpSession session){
         try

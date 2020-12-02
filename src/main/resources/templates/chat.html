@@ -35,7 +35,7 @@
         formData.append('file', file);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "http://localhost:8080/api/messages/new/file/" + sender + "/" + receiver, true);
+        xhr.open('POST', "http://138.68.94.238:8080/api/messages/new/file/" + sender + "/" + receiver, true);
         xhr.send(formData);
     }
 
@@ -48,7 +48,7 @@
             let msg = document.getElementById("messageInput").value;
 
             let xhr = new XMLHttpRequest();
-            xhr.open('POST', "http://localhost:8080/api/messages/new");
+            xhr.open('POST', "http://138.68.94.238:8080/api/messages/new");
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({sender: sender, receiver: receiver, content: msg, file: false}));
 
@@ -85,10 +85,10 @@
                 {
                     if(json[i].file)
                     {
-                        let link = "http://localhost:8080" + json[i].content; 
+                        let link = "http://138.68.94.238:8080" + json[i].content;
                         let strArray = json[i].content.split("/");
                         let filename = strArray[strArray.length - 1];
-                        deleteUrl = "http://localhost:8080/api/messages/delete/file/" + sender + "/" + receiver + "/" + filename;
+                        deleteUrl = "http://138.68.94.238:8080/api/messages/delete/file/" + sender + "/" + receiver + "/" + filename;
                         html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a> <button onclick=\"deleteFile()\">delete</button></div>";
                     }
                     else
@@ -104,7 +104,7 @@
                 console.log(xhr.response);
             }
         }
-        xhr.open('GET', 'http://localhost:8080/api/messages/' + sender + '/' + receiver);
+        xhr.open('GET', 'http://138.68.94.238:8080/api/messages/' + sender + '/' + receiver);
         xhr.send();
     }
 /*]]>*/
