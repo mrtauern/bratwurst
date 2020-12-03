@@ -130,17 +130,6 @@ public class HomeController {
 
        User theUser = userService.addUser(user, psw_repeat);
 
-        if(theUser != null)
-        {
-            theUser.setUsername(sanitizingService.sanitizeString(theUser.getUsername()));
-            theUser.setCity(sanitizingService.sanitizeString(theUser.getCity()));
-            theUser.setCountry(sanitizingService.sanitizeString(theUser.getCountry()));
-            theUser.setEmail(sanitizingService.sanitizeString(theUser.getEmail()));
-            theUser.setFirst_name(sanitizingService.sanitizeString(theUser.getFirst_name()));
-            theUser.setLast_name(sanitizingService.sanitizeString(theUser.getLast_name()));
-
-        }
-
        if (strongPassword != true) {
            model.addAttribute("password_not_strong", "true");
            System.out.println("password is not strong");
@@ -153,7 +142,15 @@ public class HomeController {
        }else if (theUser.getEmail() == null){
            model.addAttribute("username_taken_error", "true");
            System.out.println("Username already taken");
-       }else {
+       }else if (theUser != null) {
+
+           theUser.setUsername(sanitizingService.sanitizeString(theUser.getUsername()));
+           theUser.setCity(sanitizingService.sanitizeString(theUser.getCity()));
+           theUser.setCountry(sanitizingService.sanitizeString(theUser.getCountry()));
+           theUser.setEmail(sanitizingService.sanitizeString(theUser.getEmail()));
+           theUser.setFirst_name(sanitizingService.sanitizeString(theUser.getFirst_name()));
+           theUser.setLast_name(sanitizingService.sanitizeString(theUser.getLast_name()));
+
            userService.subscribeToTopic(user.getEmail());
            this.email = user.getEmail();
            // userService.setPolicyFilter(user.getEmail());
