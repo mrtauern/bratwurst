@@ -23,6 +23,7 @@ public class MessageController
     @Autowired
     private FileService fileService;
 
+    @CrossOrigin()
     @GetMapping("/{sender}/{receiver}")
     public ResponseEntity<List<Message>> getConversation(@PathVariable int sender, @PathVariable int receiver, HttpSession session)
     {
@@ -42,6 +43,7 @@ public class MessageController
         }
     }
 
+    @CrossOrigin()
     @PostMapping("/new")
     public ResponseEntity postMessage(@RequestBody Message message, HttpSession session)
     {
@@ -62,13 +64,14 @@ public class MessageController
         }
     }
 
+    @CrossOrigin()
     @PostMapping("/new/file/{sender}/{receiver}")
     public ResponseEntity uploadFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam MultipartFile file, HttpSession session)
     {
         try
         {
             User user = (User) session.getAttribute("login");
-            if (sender != user.getId() || user.getId() == receiver)
+            if (receiver != user.getId() && sender != user.getId())
             {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -81,9 +84,22 @@ public class MessageController
         }
     }
 
+    @CrossOrigin()
     @PostMapping("delete/file/{sender}/{receiver}/{filename}")
-    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam String filename){
-        fileService.deleteFile(sender, receiver, filename);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @PathVariable String filename, HttpSession session){
+        try
+        {
+            User user = (User) session.getAttribute("login");
+            if (sender != user.getId() || user.getId() == receiver)
+            {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            fileService.deleteFile(sender, receiver, filename);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (NullPointerException e)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

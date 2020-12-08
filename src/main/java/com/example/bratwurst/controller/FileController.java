@@ -19,6 +19,7 @@ public class FileController
     @Autowired
     FileService fileService;
 
+    @CrossOrigin()
     @GetMapping("/{sender}/{receiver}/{filename}")
     public ResponseEntity<Resource> serveFile(@PathVariable int sender, @PathVariable int receiver, @PathVariable String filename, HttpSession session)
     {
