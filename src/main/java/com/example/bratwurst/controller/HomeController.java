@@ -47,6 +47,12 @@ public class HomeController {
 
             System.out.println(u);
 
+            if(userService.getUserById(u.getId()).getProfile_picture() != null){
+                model.addAttribute("picture", true);
+            } else {
+                model.addAttribute("picture", false);
+            }
+
             model.addAttribute("user", userService.getUserById(u.getId()));
 
             model.addAttribute("users", userService.getUsers(u.getId()));

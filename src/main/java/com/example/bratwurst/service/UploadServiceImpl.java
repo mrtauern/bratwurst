@@ -28,7 +28,7 @@ public class UploadServiceImpl implements UploadService {
     SanitizingService sanitizingService;
 
     private static final String UPLOADED_FOLDER = "src//main//resources//static//upload//";
-    private static final String PROFILE_PICTURE_FOLDER = "files//profilePictures//";
+    private static final String PROFILE_PICTURE_FOLDER = "src//main//resources//static//profilePictures//";
     private static final List<String> CONTENT_TYPES = Arrays.asList("image/png", "image/jpeg", "image/gif");
 
     @Override

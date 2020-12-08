@@ -65,7 +65,10 @@
                     <h4 class="w3-center">
                         <span th:text="${user.username}"></span>
                     </h4>
-                    <p class="w3-center"><img th:src="@{/../static/image/test.jpg}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture"></p>
+                    <p class="w3-center">
+                        <img th:if="${picture}" th:src="${'/profilePictures/' + user.profile_picture}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                        <img th:if="${!picture}" th:src="@{/images/user_placeholder.jpg}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    </p>
                     <hr>
                     <p><i class="fa fa-building fa-fw w3-margin-right w3-text-theme"></i>
                         <span th:text="${user.city}"></span>
@@ -89,7 +92,8 @@
         <div class="w3-col m8">
             <div th:each="users : ${users}">
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img src="https://www.w3schools.com/images/picture.jpg" alt="pic" class="w3-left w3-circle w3-margin-right" style="width:80px">
+                    <img th:if="${picture}" th:src="${'/profilePictures/' + users.profile_picture}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    <img th:if="${!picture}" th:src="@{/images/user_placeholder.jpg}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
                     <a th:href="${'/chat/' + users.id}"><button class="w3-right w3-green button">Chat</button></a>
                     <h4 th:text="${users.username}"></h4><br>
                 </div>
