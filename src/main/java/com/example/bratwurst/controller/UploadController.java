@@ -33,6 +33,7 @@ public class UploadController {
     private final String DELETEFILE = "deleteFile";
     private final String REDIRECT = "redirect:/";
 
+    @CrossOrigin()
     @GetMapping("/upload")
     public String upload() {
         log.info("Upload getmapping called");
@@ -40,6 +41,7 @@ public class UploadController {
         return UPLOAD;
     }
 
+    @CrossOrigin()
     @PostMapping("/upload")
     public String singleFileUpload(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes){
 
@@ -74,6 +76,7 @@ public class UploadController {
 
     }
 
+    @CrossOrigin()
     @GetMapping("/uploadStatus")
     public String uploadStatus() {
         log.info("UploadStatus getmapping called");
@@ -81,6 +84,7 @@ public class UploadController {
         return UPLOAD_STATUS;
     }
 
+    @CrossOrigin()
     @GetMapping("/files")
     public String tilbud (Model model){
         log.info("Files is called");
@@ -89,6 +93,7 @@ public class UploadController {
         return FILES;
     }
 
+    @CrossOrigin()
     @GetMapping("/deleteFile/{id}")
     public String deleteFile (@PathVariable("id") Integer id, Model model){
         log.info("Delete file getmapping med id " + id + " called");
@@ -100,6 +105,7 @@ public class UploadController {
         return DELETEFILE;
     }
 
+    @CrossOrigin()
     @PostMapping("/deleteFile")
     public String deleteFile (@ModelAttribute File file, Model model){
         log.info("Delete file putmapping med id " + file.getId() + " called");
