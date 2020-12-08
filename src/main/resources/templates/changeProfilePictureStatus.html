@@ -40,9 +40,11 @@
 <!-- Page Container -->
 <div class="w3-container w3-content-center" style="max-width:1400px;margin-top:80px">
 
-    <h1>This is Account Settings!</h1>
+    <h1>Profile picture - Upload Status</h1>
 
-    <a href="/changeProfilePicture">Change profile picture</a>
+    <div th:if="${message}">
+        <h2 th:text="${message}"/>
+    </div>
 
 </div>
 <br>

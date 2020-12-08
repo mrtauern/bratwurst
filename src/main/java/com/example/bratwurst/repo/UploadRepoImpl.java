@@ -1,6 +1,7 @@
 package com.example.bratwurst.repo;
 
 import com.example.bratwurst.model.File;
+import com.example.bratwurst.model.User;
 import com.example.bratwurst.service.UploadServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -77,6 +78,25 @@ public class UploadRepoImpl implements UploadRepo {
 
         String sql = "DELETE FROM bratwurst.files WHERE id = ?";
         this.jdbc.update(sql, id );
+
+        return filename;
+    }
+
+    @Override
+    public String getProfilePicture(int id){
+        String sql = "SELECT * FROM bratwurst.users WHERE id = ?";
+        RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
+
+        User user = jdbc.queryForObject(sql,rowMapper, id );
+
+        return user.getProfile_picture();
+    }
+
+    @Override
+    public String saveProfilePicture(String filename, int id) {
+        String sql = "UPDATE bratwurst.users SET profile_picture = ? WHERE id = ?";
+
+        this.jdbc.update(sql, filename, id);
 
         return filename;
     }

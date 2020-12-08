@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,7 +24,12 @@ public class UploadServiceImpl implements UploadService {
     @Autowired
     UploadRepo uploadRepo;
 
+    @Autowired
+    SanitizingService sanitizingService;
+
     private static final String UPLOADED_FOLDER = "src//main//resources//static//upload//";
+    private static final String PROFILE_PICTURE_FOLDER = "files//profilePictures//";
+    private static final List<String> CONTENT_TYPES = Arrays.asList("image/png", "image/jpeg", "image/gif");
 
     @Override
     public boolean uploadFile(MultipartFile file) {
@@ -60,6 +67,68 @@ public class UploadServiceImpl implements UploadService {
 
         try {
             Path file = Paths.get(UPLOADED_FOLDER + filename);
+            Files.delete(file);
+            return true;
+        } catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public String getProfilePicture(int id){
+        return uploadRepo.getProfilePicture(id);
+    }
+
+    @Override
+    public boolean verifyProfilePicture(MultipartFile file){
+        String fileContentType = file.getContentType();
+        if(CONTENT_TYPES.contains(fileContentType)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean uploadProfilePicture(MultipartFile file, int id) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        try {
+            byte[] bytes = file.getBytes();
+            String oldFilename = sanitizingService.sanitizeFilename(file.getOriginalFilename());
+            String fileExtension = oldFilename.substring(oldFilename.lastIndexOf(".")+1);
+            String filename = timestamp.toString() + "." + fileExtension;
+
+            Path path = Paths.get(PROFILE_PICTURE_FOLDER, filename);
+            Files.write(path, bytes);
+
+            if(uploadRepo.getProfilePicture(id) != null){
+                deleteProfilePicture(uploadRepo.getProfilePicture(id));
+            }
+
+            log.info("Filename from DB: "+uploadRepo.getProfilePicture(id));
+
+            log.info("File extension is: " + filename.substring(filename.lastIndexOf(".")+1));
+
+            uploadRepo.saveProfilePicture(filename, id);
+
+            log.info("Uploading profile picture: " + filename);
+
+            return true;
+        } catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean deleteProfilePicture(String filename) {
+
+        log.info("Delete profile picture: " + filename);
+
+        try {
+            Path file = Paths.get(PROFILE_PICTURE_FOLDER + filename);
             Files.delete(file);
             return true;
         } catch (IOException e){

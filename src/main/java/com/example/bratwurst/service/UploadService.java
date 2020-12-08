@@ -13,4 +13,12 @@ public interface UploadService {
     public List<File> getFiles(int user);
     public File getFile(int id);
     public Boolean deleteFile(int id);
+
+    String getProfilePicture(int id);
+
+    boolean verifyProfilePicture(MultipartFile file);
+
+    boolean uploadProfilePicture(MultipartFile file, int id);
+
+    Boolean deleteProfilePicture(String filename);
 }

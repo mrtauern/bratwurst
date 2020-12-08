@@ -65,7 +65,7 @@
                     <h4 class="w3-center">
                         <span th:text="${user.username}"></span>
                     </h4>
-                    <p class="w3-center"><img src="https://www.w3schools.com/images/picture.jpg" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture"></p>
+                    <p class="w3-center"><img th:src="@{/../static/image/test.jpg}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture"></p>
                     <hr>
                     <p><i class="fa fa-building fa-fw w3-margin-right w3-text-theme"></i>
                         <span th:text="${user.city}"></span>

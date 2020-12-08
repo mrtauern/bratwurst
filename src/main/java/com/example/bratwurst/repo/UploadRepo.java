@@ -13,4 +13,7 @@ public interface UploadRepo {
     public List<File> getFiles(int user);
     public File getFile(int id);
     public String deleteFile(int id);
+
+    String getProfilePicture(int id);
+    String saveProfilePicture(String filename, int id);
 }
