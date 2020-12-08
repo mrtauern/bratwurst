@@ -98,7 +98,14 @@ public class UploadServiceImpl implements UploadService {
             byte[] bytes = file.getBytes();
             String oldFilename = sanitizingService.sanitizeFilename(file.getOriginalFilename());
             String fileExtension = oldFilename.substring(oldFilename.lastIndexOf(".")+1);
-            String filename = timestamp.toString() + "." + fileExtension;
+
+            String newFilename = timestamp.toString();
+            newFilename = newFilename.replace("-", "");
+            newFilename = newFilename.replace(" ", "");
+            newFilename = newFilename.replace(":", "");
+            newFilename = newFilename.replace(".", "");
+
+            String filename = newFilename + "." + fileExtension;
 
             Path path = Paths.get(PROFILE_PICTURE_FOLDER, filename);
             Files.write(path, bytes);
