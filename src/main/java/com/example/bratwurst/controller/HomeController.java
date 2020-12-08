@@ -38,6 +38,7 @@ public class HomeController {
     @Autowired
     SanitizingService sanitizingService;
 
+    @CrossOrigin()
     @GetMapping("/home")
     public String home(HttpSession session, Model model){
 
@@ -57,12 +58,14 @@ public class HomeController {
         }
     }
 
+    @CrossOrigin()
     @GetMapping("/messages")
     public String messages(){
 
         return "messages";
     }
 
+    @CrossOrigin()
     @GetMapping("/notifications")
     public String notifications() {
 
@@ -71,13 +74,14 @@ public class HomeController {
 
 
     // LOGIN
+    @CrossOrigin()
     @GetMapping("/")
     public String login(){
         return "index";
     }
 
+    @CrossOrigin()
     @PostMapping("/login")
-
     public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) throws JSONException {
 
         User user = userService.getLogin(username, password);
@@ -103,7 +107,7 @@ public class HomeController {
     }
 
     // LOGOUT
-
+    @CrossOrigin()
     @GetMapping("/logout")
     public String logout(HttpSession session){
 
@@ -117,12 +121,13 @@ public class HomeController {
     }
 
     // SIGN UP
-
+    @CrossOrigin()
     @GetMapping("/signup")
     public String signup(){
         return "signup";
     }
 
+    @CrossOrigin()
     @PostMapping("/signup")
     public String signup(@ModelAttribute User user, @RequestParam String psw_repeat, HttpSession session, Model model) throws JSONException {
 
@@ -154,18 +159,19 @@ public class HomeController {
            userService.subscribeToTopic(user.getEmail());
            this.email = user.getEmail();
            // userService.setPolicyFilter(user.getEmail());
-           return "welcome";
+           return "Welcome";
        }
            return "signup";
        }
 
-
+    @CrossOrigin()
     @GetMapping("/setPolicy")
     public String setPolicy() throws JSONException {
         userService.setPolicyFilter(this.email);
         return "index";
     }
 
+    @CrossOrigin()
     @PostMapping("/Auth_code")
     public String sendSNS(@RequestParam int code, HttpSession session) throws JSONException {
         boolean isValid = userService.validateAuthCode(code);

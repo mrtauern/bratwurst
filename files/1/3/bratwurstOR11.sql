@@ -54,6 +54,7 @@ CREATE TABLE `messages` (
   `sender` int(11) NOT NULL,
   `receiver` int(11) NOT NULL,
   `content` longtext,
+  `file` boolean,
   PRIMARY KEY (`id`),
   KEY `fk_sender_idx` (`sender`),
   KEY `fk_receiver_idx` (`receiver`),
