@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sf="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth</title>
+</head>
+<body>
+
+<form th:action="@{/Auth_code}" method="post">
+
+    <div class="container">
+        <label ><b>Auth Code</b></label>
+        <input type="text" placeholder="Enter Auth Code" th:name="code" required>
+
+        <button type="submit">Submit</button>
+
+    </div>
+</form>
+
+</body>
+</html>
