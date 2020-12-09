@@ -2,6 +2,7 @@ package com.example.bratwurst.controller;
 
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.example.bratwurst.model.FriendsViewModel;
 import org.json.JSONException;
 import org.springframework.context.annotation.Bean;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -43,13 +46,61 @@ public class HomeController {
     public String home(HttpSession session, Model model){
 
         if (session.getAttribute("login") != null){
+
+            List<FriendsViewModel> friendsList = new ArrayList<>();
+            List<FriendsViewModel> notFriendsYetList = new ArrayList<>();
+            List<FriendsViewModel> waitingList = new ArrayList<>();
+            List<FriendsViewModel> notFriendsList = new ArrayList<>();
+
             User u = (User)session.getAttribute("login");
+            List<FriendsViewModel> fvmList = userService.getUsers(u.getId());
+
+            for (int i = 0; i < fvmList.size(); i++) {
+
+                boolean found = false;
+
+                for (int j = 0; j < fvmList.size(); j++) {
+                    if (fvmList.get(i).getId() == u.getId()) {
+                        found = true;
+                        break;
+                    } else if(((fvmList.get(i).getId() == fvmList.get(j).getUser1() || fvmList.get(i).getId() == fvmList.get(j).getUser2())
+                            && (u.getId() == fvmList.get(j).getUser1() || u.getId() == fvmList.get(j).getUser2()))
+                            && fvmList.get(j).isAccepted())
+                    {
+                        friendsList.add(fvmList.get(i));
+                        found = true;
+                        break;
+                    } else if((fvmList.get(i).getId() == fvmList.get(j).getUser1()
+                            && u.getId() == fvmList.get(j).getUser2())
+                            && !fvmList.get(j).isAccepted())
+                    {
+                        notFriendsYetList.add(fvmList.get(i));
+                        found = true;
+                        break;
+                    }else if((fvmList.get(i).getId() == fvmList.get(j).getUser2()
+                            && u.getId() == fvmList.get(j).getUser1())
+                            && !fvmList.get(j).isAccepted()) {
+                        waitingList.add(fvmList.get(i));
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+                    notFriendsList.add(fvmList.get(i));
+                }
+            }
 
             System.out.println(u);
 
+            int notifications = (userService.notifications(u.getId())).size();
+            model.addAttribute("notifications", notifications);
+
             model.addAttribute("user", userService.getUserById(u.getId()));
 
-            model.addAttribute("users", userService.getUsers(u.getId()));
+            model.addAttribute("friends", friendsList);
+            model.addAttribute("notFriendsYet", notFriendsYetList);
+            model.addAttribute("notFriends", notFriendsList);
+            model.addAttribute("waiting", waitingList);
             return "home";
         }else {
 
@@ -60,16 +111,44 @@ public class HomeController {
 
     @CrossOrigin()
     @GetMapping("/messages")
-    public String messages(){
+    public String messages(HttpSession session, Model model){
 
-        return "messages";
+        if (session.getAttribute("login") != null){
+
+            User u = (User)session.getAttribute("login");
+
+            int notifications = (userService.notifications(u.getId())).size();
+            model.addAttribute("notifications", notifications);
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            return "messages";
+        }else {
+
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
     }
 
     @CrossOrigin()
     @GetMapping("/notifications")
-    public String notifications() {
+    public String notifications(HttpSession session, Model model) {
 
-        return "notifications";
+        if (session.getAttribute("login") != null){
+
+            User u = (User)session.getAttribute("login");
+
+            int notifications = (userService.notifications(u.getId())).size();
+            model.addAttribute("notifications", notifications);
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            return "notifications";
+        }else {
+
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
     }
 
 

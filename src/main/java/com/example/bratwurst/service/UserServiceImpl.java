@@ -2,6 +2,7 @@ package com.example.bratwurst.service;
 
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.*;
+import com.example.bratwurst.model.FriendsViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +125,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public List<User> getUsers(int id) {
+    public List<FriendsViewModel> getUsers(int id) {
         return userRepo.getUsers(id);
     }
 
@@ -214,6 +215,19 @@ public class UserServiceImpl implements UserService {
 
     public User getUserById(int id) {
         return userRepo.getUserById(id);
+    }
+
+    public void friendRequest(int userId, int receiverId){
+        userRepo.friendRequest(userId, receiverId);
+    }
+
+    public List<User> notifications(int id){
+
+        return userRepo.notifications(id);
+    }
+
+    public void acceptRequest(int receiverId, int userId){
+        userRepo.acceptRequest(receiverId, userId);
     }
 
 }
