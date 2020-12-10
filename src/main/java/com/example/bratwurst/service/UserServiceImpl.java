@@ -216,4 +216,22 @@ public class UserServiceImpl implements UserService {
         return userRepo.getUserById(id);
     }
 
+    @Override
+    public boolean isAdmin(User user){
+
+        if (user.getEmail().equals("tobias.ku22@gmail.com")){
+
+            return true;
+        }else {
+
+            return false;
+
+        }
+    }
+
+    @Override
+    public void deleteById(int id) {
+        userRepo.deleteById(id);
+    }
+
 }

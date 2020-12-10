@@ -13,4 +13,5 @@ public interface UserRepo {
     User addUser(User user);
     User findLogin(String username, String email);
     User getUserById(int id);
+    void deleteById(int id);
 }

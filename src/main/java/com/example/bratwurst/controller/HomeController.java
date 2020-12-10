@@ -43,19 +43,73 @@ public class HomeController {
     public String home(HttpSession session, Model model){
 
         if (session.getAttribute("login") != null){
+
             User u = (User)session.getAttribute("login");
 
-            System.out.println(u);
+            boolean isAdmin = userService.isAdmin(u);
 
-            model.addAttribute("user", userService.getUserById(u.getId()));
+            if (isAdmin){
 
-            model.addAttribute("users", userService.getUsers(u.getId()));
-            return "home";
+                System.out.println(u);
+
+                model.addAttribute("user", userService.getUserById(u.getId()));
+
+                model.addAttribute("users", userService.getUsers(u.getId()));
+
+                model.addAttribute("admin", "true");
+
+                return "home";
+
+            }else {
+                System.out.println(u);
+
+                model.addAttribute("user", userService.getUserById(u.getId()));
+
+                model.addAttribute("users", userService.getUsers(u.getId()));
+                return "home";
+
+            }
+
         }else {
 
             model.addAttribute("notLoggedIn", "notLoggedIn");
             return "index";
         }
+    }
+
+    @CrossOrigin()
+    @GetMapping("/admin")
+    public String isAdmin(HttpSession session, Model model){
+        if (session.getAttribute("login") != null ){
+
+            User u = (User)session.getAttribute("login");
+
+            boolean isAdmin = userService.isAdmin(u);
+
+            if (isAdmin){
+
+                model.addAttribute("admin", "true");
+                model.addAttribute("users", userService.getUsers(u.getId()));
+
+                return "admin";
+            }else {
+                model.addAttribute("notLoggedIn", "notLoggedIn");
+                return "index";
+            }
+        }else {
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
+    }
+
+    @CrossOrigin()
+    @PostMapping("/admin/delete")
+    public String deleteUser(@RequestParam int userId){
+        userService.deleteById(userId);
+
+        // Delete the email from sns
+
+        return "redirect:/admin/delete";
     }
 
     @CrossOrigin()

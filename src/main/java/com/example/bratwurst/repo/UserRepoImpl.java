@@ -78,7 +78,7 @@ public class UserRepoImpl implements UserRepo {
 
         List<User> userList = new ArrayList<User>();
 
-        String sql = "SELECT id, username, first_name, last_name, country FROM users " +
+        String sql = "SELECT id, username, first_name, last_name, country, email FROM users " +
                 "WHERE id != ?";
 
         return this.jdbc.query(sql, rs ->
@@ -89,8 +89,9 @@ public class UserRepoImpl implements UserRepo {
                 String first_name = rs.getString("first_name");
                 String last_name = rs.getString("last_name");
                 String country = rs.getString("country");
+                String email = rs.getString("email");
 
-                User u = new User(username, first_name, last_name, country);
+                User u = new User(username, first_name, last_name, country, email);
                 u.setId(userId);
 
                 userList.add(u);
@@ -140,5 +141,11 @@ public class UserRepoImpl implements UserRepo {
         RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
         User user = jdbc.queryForObject(sql, rowMapper, id);
         return user;
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        jdbc.update(sql, id);
     }
 }

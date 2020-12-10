@@ -19,5 +19,7 @@ public interface UserService {
     User addUser(User user, String confirm_password);
     boolean passwordStrong(String password);
     User getUserById(int id);
+    boolean isAdmin(User user);
+    void deleteById(int id);
 
 }
