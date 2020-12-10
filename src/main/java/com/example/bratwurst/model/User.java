@@ -31,11 +31,12 @@ public class User {
     }
 
     //Get Users at homepage
-    public User(String username, String first_name, String last_name, String country) {
+    public User(String username, String first_name, String last_name, String country, String email) {
         this.username = username;
         this.first_name = first_name;
         this.last_name = last_name;
         this.country = country;
+        this.email = email;
     }
 
     public User() {

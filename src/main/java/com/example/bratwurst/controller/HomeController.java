@@ -2,6 +2,7 @@ package com.example.bratwurst.controller;
 
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.example.bratwurst.model.FriendsViewModel;
 import org.json.JSONException;
 import org.springframework.context.annotation.Bean;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -43,7 +46,74 @@ public class HomeController {
     public String home(HttpSession session, Model model){
 
         if (session.getAttribute("login") != null){
-            User u = (User)session.getAttribute("login");
+
+            User u = (User) session.getAttribute("login");
+            boolean isAdmin = userService.isAdmin(u);
+
+            if (isAdmin) {
+
+                System.out.println(u);
+
+                model.addAttribute("user", userService.getUserById(u.getId()));
+
+                model.addAttribute("users", userService.getUsers(u.getId()));
+
+                model.addAttribute("admin", "true");
+
+                return "home";
+            }else {
+
+            List<FriendsViewModel> friendsList = new ArrayList<>();
+            List<FriendsViewModel> notFriendsYetList = new ArrayList<>();
+            List<FriendsViewModel> waitingList = new ArrayList<>();
+            List<FriendsViewModel> notFriendsList = new ArrayList<>();
+
+            List<FriendsViewModel> fvmList = userService.getUsers(u.getId());
+
+            for (int i = 0; i < fvmList.size(); i++) {
+
+                boolean found = false;
+
+                for (int j = 0; j < fvmList.size(); j++) {
+                    if (fvmList.get(i).getId() == u.getId()) {
+                        found = true;
+                        break;
+                    } else if(((fvmList.get(i).getId() == fvmList.get(j).getUser1() || fvmList.get(i).getId() == fvmList.get(j).getUser2())
+                            && (u.getId() == fvmList.get(j).getUser1() || u.getId() == fvmList.get(j).getUser2()))
+                            && fvmList.get(j).isAccepted())
+                    {
+                        friendsList.add(fvmList.get(i));
+                        found = true;
+                        break;
+                    } else if((fvmList.get(i).getId() == fvmList.get(j).getUser1()
+                            && u.getId() == fvmList.get(j).getUser2())
+                            && !fvmList.get(j).isAccepted())
+                    {
+                        notFriendsYetList.add(fvmList.get(i));
+                        found = true;
+                        break;
+                    }else if((fvmList.get(i).getId() == fvmList.get(j).getUser2()
+                            && u.getId() == fvmList.get(j).getUser1())
+                            && !fvmList.get(j).isAccepted()) {
+                        waitingList.add(fvmList.get(i));
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+                    notFriendsList.add(fvmList.get(i));
+                }
+            }
+
+            int notifications = (userService.notifications(u.getId())).size();
+            model.addAttribute("notifications", notifications);
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            model.addAttribute("friends", friendsList);
+            model.addAttribute("notFriendsYet", notFriendsYetList);
+            model.addAttribute("notFriends", notFriendsList);
+            model.addAttribute("waiting", waitingList);
 
             System.out.println(u);
 
@@ -57,6 +127,9 @@ public class HomeController {
 
             model.addAttribute("users", userService.getUsers(u.getId()));
             return "home";
+
+            }
+
         }else {
 
             model.addAttribute("notLoggedIn", "notLoggedIn");
@@ -65,17 +138,80 @@ public class HomeController {
     }
 
     @CrossOrigin()
-    @GetMapping("/messages")
-    public String messages(){
+    @GetMapping("/admin")
+    public String isAdmin(HttpSession session, Model model){
+        if (session.getAttribute("login") != null ){
 
-        return "messages";
+            User u = (User)session.getAttribute("login");
+
+            boolean isAdmin = userService.isAdmin(u);
+
+            if (isAdmin){
+
+                model.addAttribute("admin", "true");
+                model.addAttribute("users", userService.getUsers(u.getId()));
+
+                return "admin";
+            }else {
+                model.addAttribute("notLoggedIn", "notLoggedIn");
+                return "index";
+            }
+        }else {
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
+    }
+
+    @CrossOrigin()
+    @PostMapping("/admin/delete")
+    public String deleteUser(@RequestParam int userId){
+        userService.deleteById(userId);
+
+        // Delete the email from sns
+
+        return "redirect:/admin/delete";
+    }
+
+    @CrossOrigin()
+    @GetMapping("/messages")
+    public String messages(HttpSession session, Model model){
+
+        if (session.getAttribute("login") != null){
+
+            User u = (User)session.getAttribute("login");
+
+            int notifications = (userService.notifications(u.getId())).size();
+            model.addAttribute("notifications", notifications);
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            return "messages";
+        }else {
+
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
     }
 
     @CrossOrigin()
     @GetMapping("/notifications")
-    public String notifications() {
+    public String notifications(HttpSession session, Model model) {
 
-        return "notifications";
+        if (session.getAttribute("login") != null){
+
+            User u = (User)session.getAttribute("login");
+
+            int notifications = (userService.notifications(u.getId())).size();
+            model.addAttribute("notifications", notifications);
+
+            model.addAttribute("user", userService.getUserById(u.getId()));
+
+            return "notifications";
+        }else {
+
+            model.addAttribute("notLoggedIn", "notLoggedIn");
+            return "index";
+        }
     }
 
 
