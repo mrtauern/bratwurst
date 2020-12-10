@@ -38,7 +38,7 @@ public class UploadController {
     private final String CHANGE_PROFILE_PICTURE_STATUS = "changeProfilePictureStatus";
     private final String REDIRECT = "redirect:/";
 
-    @CrossOrigin()
+    /*@CrossOrigin()
     @GetMapping("/upload")
     public String upload() {
         log.info("Upload getmapping called");
@@ -65,17 +65,17 @@ public class UploadController {
             redirectAttributes.addFlashAttribute("message", "ERROR: '" + file.getOriginalFilename() + "' not uploaded!");
         }
 
-        /*try {
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER, file.getOriginalFilename());
-            Files.write(path, bytes);
+        //try {
+        //    byte[] bytes = file.getBytes();
+        //    Path path = Paths.get(UPLOADED_FOLDER, file.getOriginalFilename());
+        //    Files.write(path, bytes);
 
-            log.info("Uploading: " + file.getOriginalFilename());
+        //    log.info("Uploading: " + file.getOriginalFilename());
 
-            redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
-        } catch (IOException e){
-            e.printStackTrace();;
-        }*/
+        //    redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
+        //} catch (IOException e){
+        //    e.printStackTrace();;
+        //}
 
         return REDIRECT + UPLOAD_STATUS;
 
@@ -104,8 +104,8 @@ public class UploadController {
         log.info("Delete file getmapping med id " + id + " called");
 
         model.addAttribute("file", uploadService.getFile(id));
-        /*String offerName = adminService.findOffer(id).getOfferName();
-        model.addAttribute("pageTitle", "Slet tilbud (" + offerName + ")");*/
+        //String offerName = adminService.findOffer(id).getOfferName();
+        //model.addAttribute("pageTitle", "Slet tilbud (" + offerName + ")");
 
         return DELETEFILE;
     }
@@ -119,7 +119,7 @@ public class UploadController {
         uploadService.deleteFile(id);
 
         return REDIRECT + FILES;
-    }
+    }*/
 
     @CrossOrigin()
     @GetMapping("/changeProfilePicture")
@@ -195,10 +195,19 @@ public class UploadController {
 
     @CrossOrigin()
     @GetMapping("/changeProfilePictureStatus")
-    public String changeProfilePictureStatus() {
+    public String changeProfilePictureStatus(RedirectAttributes redirectAttributes, HttpSession session) {
         log.info("changeProfilePictureStatus getmapping called");
 
-        return CHANGE_PROFILE_PICTURE_STATUS;
+        if (session.getAttribute("login") != null) {
+            //user = (User) session.getAttribute("login");
+
+            return CHANGE_PROFILE_PICTURE_STATUS;
+        } else {
+            log.info("Not logged in!");
+
+            redirectAttributes.addFlashAttribute("notLoggedIn", true);
+            return REDIRECT;
+        }
     }
 }
 
