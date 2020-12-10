@@ -8,15 +8,56 @@ public class FriendsViewModel {
     private int user1;
     private int user2;
     private boolean accepted;
+    private String first_name;
+    private String last_name;
+    private String country;
 
-    public FriendsViewModel(int id, String username, String profile_picture, int user1, int user2, boolean accepted) {
+    public FriendsViewModel(int id, String username, String profile_picture, int user1, int user2, boolean accepted, String first_name, String last_name, String country, String email) {
         this.id = id;
         this.username = username;
         this.profile_picture = profile_picture;
         this.user1 = user1;
         this.user2 = user2;
         this.accepted = accepted;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.country = country;
+        this.email = email;
     }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    private String email;
 
     public int getId() {
         return id;

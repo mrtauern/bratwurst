@@ -17,4 +17,5 @@ public interface UserRepo {
     void friendRequest(int userId, int receiverId);
     List<User> notifications(int id);
     void acceptRequest(int receiverId, int userId);
+    void deleteById(int id);
 }

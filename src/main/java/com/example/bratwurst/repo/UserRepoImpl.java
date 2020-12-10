@@ -80,20 +80,28 @@ public class UserRepoImpl implements UserRepo {
 
         List<FriendsViewModel> userList = new ArrayList<>();
 
-        String sql = "SELECT u.id, u.username, u.profile_picture, f.user1, f.user2, f.accepted FROM users AS u " +
+
+        String sql = "SELECT u.id, u.username, u.profile_picture, u.last_name, u.first_name, u.country, u.email, f.user1, f.user2, f.accepted FROM users AS u " +
                 "LEFT OUTER JOIN friends AS f on f.user1 = u.id";
+
 
         return this.jdbc.query(sql, rs ->
         {
             while (rs.next()) {
                 int userId = rs.getInt("id");
                 String username = rs.getString("username");
+
                 String profile_picture = rs.getString("profile_picture");
                 int user1 = rs.getInt("user1");
                 int user2 = rs.getInt("user2");
                 boolean accepted = rs.getBoolean("accepted");
+                String first_name = rs.getString("first_name");
+                String last_name = rs.getString("last_name");
+                String country = rs.getString("country");
+                String email = rs.getString("email");
 
-                FriendsViewModel fvm = new FriendsViewModel(userId, username, profile_picture, user1, user2, accepted);
+                FriendsViewModel fvm = new FriendsViewModel(userId, username, profile_picture, user1, user2, accepted, first_name, last_name, country, email);
+
 
                 userList.add(fvm);
             }
@@ -172,10 +180,16 @@ public class UserRepoImpl implements UserRepo {
 
     }
 
-    public void acceptRequest(int receiverId, int userId){
+    public void acceptRequest(int receiverId, int userId) {
 
         String sql = "UPDATE friends SET accepted = 1 WHERE user1 = ? AND user2 = ?";
 
         jdbc.update(sql, receiverId, userId);
+    }
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        jdbc.update(sql, id);
+
     }
 }

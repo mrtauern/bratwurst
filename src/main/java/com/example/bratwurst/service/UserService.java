@@ -23,5 +23,8 @@ public interface UserService {
     void friendRequest(int userId, int receiverId);
     List<User> notifications(int id);
     void acceptRequest(int receiverId, int userId);
+    boolean isAdmin(User user);
+    void deleteById(int id);
+
 
 }

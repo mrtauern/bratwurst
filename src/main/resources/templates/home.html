@@ -43,8 +43,10 @@
                 <a href="/notifications" class="w3-bar-item w3-button"><span th:text="${notifications} + ' new friend request(s)'"></span></a>
             </div>
         </div>
+
         <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="Logout"> Logout
         </a>
+        <a th:if="${admin}" th:href="@{/admin}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="admin"> Admin </a>
     </div>
 </div>
 

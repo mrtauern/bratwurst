@@ -226,8 +226,26 @@ public class UserServiceImpl implements UserService {
         return userRepo.notifications(id);
     }
 
-    public void acceptRequest(int receiverId, int userId){
+    public void acceptRequest(int receiverId, int userId) {
         userRepo.acceptRequest(receiverId, userId);
+    }
+
+    @Override
+    public boolean isAdmin(User user){
+
+        if (user.getEmail().equals("tobias.ku22@gmail.com")){
+
+            return true;
+        }else {
+
+            return false;
+
+        }
+    }
+
+    @Override
+    public void deleteById(int id) {
+        userRepo.deleteById(id);
     }
 
 }
