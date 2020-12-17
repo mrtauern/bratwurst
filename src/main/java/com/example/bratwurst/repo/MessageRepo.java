@@ -8,6 +8,10 @@ import java.util.List;
 @Repository
 public interface MessageRepo
 {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void callStoredProcedure(BookMovie bookMovie){
+        StoredProcedureQuery spInsert = entityManager.createStoredProcedureQuery("PogChamp.bookMovie");
+
     public List<Message> getConversation(int sender, int receiver);
     public void postMessage(Message msg);
 }
