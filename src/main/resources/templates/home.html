@@ -34,14 +34,19 @@
         <a href="/home" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Bratwurst</a>
         <a href="/account_settings" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i class="fa fa-user-circle"></i></a>
         <a href="/messages" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>
-        <a href="/notifications">
-            <button class="w3-button w3-padding-large" title="Notifications">
+        <div class="w3-dropdown-hover w3-hide-small">
+            <a href="/notifications"><button href="/notifications" class="w3-button w3-padding-large" title="Notifications">
                 <i class="fa fa-bell"></i>
-                <span class="w3-badge w3-right w3-small w3-green">1</span>
-            </button>
-        </a>
+                <span th:if="${notifications &gt; 0}" class="w3-badge w3-right w3-small w3-green" th:text="${notifications}"></span>
+            </button></a>
+            <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px" th:if="${notifications &gt; 0}">
+                <a href="/notifications" class="w3-bar-item w3-button"><span th:text="${notifications} + ' new friend request(s)'"></span></a>
+            </div>
+        </div>
+
         <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="Logout"> Logout
         </a>
+        <a th:if="${admin}" th:href="@{/admin}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="admin"> Admin </a>
     </div>
 </div>
 
@@ -65,7 +70,9 @@
                     <h4 class="w3-center">
                         <span th:text="${user.username}"></span>
                     </h4>
-                    <p class="w3-center"><img src="https://www.w3schools.com/images/picture.jpg" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture"></p>
+                    <p class="w3-center">
+                        <img th:src="${user.profile_picture != null} ? ${'/profilePictures/' + user.profile_picture} : @{/images/user_placeholder.png}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    </p>
                     <hr>
                     <p><i class="fa fa-building fa-fw w3-margin-right w3-text-theme"></i>
                         <span th:text="${user.city}"></span>
@@ -87,11 +94,42 @@
 
         <!-- Middle Column -->
         <div class="w3-col m8">
-            <div th:each="users : ${users}">
+            <!-- FRIENDS -->
+            <div th:each="friends : ${friends}">
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img src="https://www.w3schools.com/images/picture.jpg" alt="pic" class="w3-left w3-circle w3-margin-right" style="width:80px">
+                    <img th:src="${friends.profile_picture != null} ? ${'/profilePictures/' + friends.profile_picture} : @{/images/user_placeholder.png}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    <a th:href="${'/chat/' + friends.id}"><button class="w3-right w3-blue button">Chat</button></a>
+                    <h4 th:text="${friends.username}"></h4><br>
+                </div>
+            </div>
+            <!-- NOT FRIENDS YET -->
+            <div th:each="notFriendsYet : ${notFriendsYet}">
+                <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+                    <img th:src="${notFriendsYet.profile_picture != null} ? ${'/profilePictures/' + notFriendsYet.profile_picture} : @{/images/user_placeholder.png}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    <a th:href="${'/acceptFriendRequest/' + notFriendsYet.id}"><button class="w3-right w3-green button">Accept friend request</button></a>
+                    <h4 th:text="${notFriendsYet.username}"></h4><br>
+                </div>
+            </div>
+            <!-- NOT FRIENDS -->
+            <div th:each="notFriends : ${notFriends}">
+                <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+                    <img th:src="${notFriends.profile_picture != null} ? ${'/profilePictures/' + notFriends.profile_picture} : @{/images/user_placeholder.png}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    <a th:href="${'/friendRequest/' + notFriends.id}"><button class="w3-right w3-teal button">Send friend request</button></a>
+                    <h4 th:text="${notFriends.username}"></h4><br>
+                </div>
+            </div>
+            <!-- WAITING TO BE FRIENDS -->
+            <div th:each="waiting : ${waiting}">
+                <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+
+                    <!--<img th:src="${users.profile_picture != null} ? ${'/profilePictures/' + users.profile_picture} : @{/images/user_placeholder.png}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
                     <a th:href="${'/chat/' + users.id}"><button class="w3-right w3-green button">Chat</button></a>
-                    <h4 th:text="${users.username}"></h4><br>
+                    <h4 th:text="${users.username}"></h4><br>-->
+
+                    <img th:src="${waiting.profile_picture != null} ? ${'/profilePictures/' + waiting.profile_picture} : @{/images/user_placeholder.png}" class="w3-circle" style="height:106px;width:106px" alt="user_profile_picture">
+                    <button class="w3-right w3-blue-grey button" disabled>Waiting for acceptance</button>
+                    <h4 th:text="${waiting.username}"></h4><br>
+
                 </div>
             </div>
         </div>
