@@ -134,16 +134,16 @@ public class FileServiceImpl implements FileService
     @Override
     public void deleteFile(int sender, int receiver, String filename) {
 
-
-//        try {
-//            Path file = Paths.get(root.toString() + "/" + sender + "/" + receiver + "/" + filename);
-//            Files.delete(file);
-//            log.info(filename + " deleted successfully");
-//            //return true;
-//        } catch (IOException e){
-//            e.printStackTrace();
-//            log.info("ERROR: " + filename + " not deleted!");
-//            //return false;
-//        }
+        filename = sanitizingService.sanitizeFilename(filename);
+        try {
+            Path file = Paths.get(root.toString() + "/" + sender + "/" + receiver + "/" + filename);
+            Files.delete(file);
+            log.info(filename + " deleted successfully");
+            //return true;
+        } catch (IOException e){
+            e.printStackTrace();
+            log.info("ERROR: " + filename + " not deleted!");
+            //return false;
+        }
     }
 }

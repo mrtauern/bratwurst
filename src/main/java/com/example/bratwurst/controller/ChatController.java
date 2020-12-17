@@ -28,6 +28,7 @@ public class ChatController
                 return "error";
             }
 
+            model.addAttribute("csrf", session.getAttribute("csrf-token"));
             model.addAttribute("receiver", receiver);
             model.addAttribute("sender", user.getId());
             return "chat";

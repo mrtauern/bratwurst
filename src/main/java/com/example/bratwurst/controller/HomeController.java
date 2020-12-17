@@ -2,6 +2,7 @@ package com.example.bratwurst.controller;
 
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.example.bratwurst.hashfunctions.HashFunctions;
 import org.json.JSONException;
 import org.springframework.context.annotation.Bean;
 
@@ -178,6 +179,7 @@ public class HomeController {
 
         if (isValid){
             session.setAttribute("login", this.user);
+            session.setAttribute("csrf-token", HashFunctions.randomAlphanumericString());
             return "redirect:/home";
         }else {
 
