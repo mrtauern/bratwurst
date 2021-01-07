@@ -9,6 +9,7 @@
 <div id="messages">
 
 </div>
+<input type="hidden" th:value="${csrf}" id="csrf"/>
 <input type="text" id="messageInput" onkeypress="sendMessage(event)"/>
 <input type="file" name="file" id="file" />
 <button onclick="uploadFile()">send fil</button>
@@ -23,6 +24,11 @@
         setInterval(loadMessages, 1000);   
     }
 
+    function appendCSRF()
+    {
+        return "?csrf=" + document.getElementById("csrf").value
+    }
+
     function uploadFile()
     {
         console.log("uploading");
@@ -35,7 +41,7 @@
         formData.append('file', file);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "http://138.68.94.238/api/messages/new/file/" + sender + "/" + receiver, true);
+        xhr.open('POST', "http://localhost:8080/api/messages/new/file/" + sender + "/" + receiver + appendCSRF(), true);
         xhr.send(formData);
     }
 
@@ -48,7 +54,7 @@
             let msg = document.getElementById("messageInput").value;
 
             let xhr = new XMLHttpRequest();
-            xhr.open('POST', "http://138.68.94.238/api/messages/new");
+            xhr.open('POST', "http://localhost:8080/api/messages/new" + appendCSRF());
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({sender: sender, receiver: receiver, content: msg, file: false}));
 
@@ -68,7 +74,6 @@
 
     function loadMessages()
     {
-        console.log("loading shiet");
         var xhr = new XMLHttpRequest();
         let sender = /*[[${sender}]]*/ -1;
         let receiver = /*[[${receiver}]]*/ -1;
@@ -85,10 +90,10 @@
                 {
                     if(json[i].file)
                     {
-                        let link = "http://138.68.94.238" + json[i].content;
+                        let link = "http://localhost:8080" + json[i].content;
                         let strArray = json[i].content.split("/");
                         let filename = strArray[strArray.length - 1];
-                        deleteUrl = "http://138.68.94.238/api/messages/delete/file/" + sender + "/" + receiver + "/" + filename;
+                        deleteUrl = "http://localhost:8080/api/messages/delete/file/" + sender + "/" + receiver + "/" + filename + appendCSRF();
                         html += "<div><h3>" + json[i].senderUsername + " har sendt en fil:</h3>" + filename + " <a href=\"" + link + "\">download</a> <button onclick=\"deleteFile()\">delete</button></div>";
                     }
                     else
@@ -104,7 +109,7 @@
                 console.log(xhr.response);
             }
         }
-        xhr.open('GET', 'http://138.68.94.238/api/messages/' + sender + '/' + receiver);
+        xhr.open('GET', 'http://localhost:8080/api/messages/' + sender + '/' + receiver + appendCSRF());
         xhr.send();
     }
 /*]]>*/

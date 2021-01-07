@@ -2,6 +2,7 @@ package com.example.bratwurst.controller;
 
 import com.example.bratwurst.model.Message;
 import com.example.bratwurst.model.User;
+import com.example.bratwurst.service.EncryptionService;
 import com.example.bratwurst.service.FileService;
 import com.example.bratwurst.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,14 @@ public class MessageController
 
     @CrossOrigin()
     @GetMapping("/{sender}/{receiver}")
-    public ResponseEntity<List<Message>> getConversation(@PathVariable int sender, @PathVariable int receiver, HttpSession session)
+    public ResponseEntity<List<Message>> getConversation(@PathVariable int sender, @PathVariable int receiver, HttpSession session, @RequestParam String csrf)
     {
         try
         {
+            if(!csrf.equals(session.getAttribute("csrf-token")) || session.getAttribute("csrf-token") == null)
+            {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             User user = (User) session.getAttribute("login");
             if(sender != user.getId() || user.getId() == receiver)
             {
@@ -45,10 +50,14 @@ public class MessageController
 
     @CrossOrigin()
     @PostMapping("/new")
-    public ResponseEntity postMessage(@RequestBody Message message, HttpSession session)
+    public ResponseEntity postMessage(@RequestBody Message message, HttpSession session, @RequestParam String csrf)
     {
         try
         {
+            if(!csrf.equals(session.getAttribute("csrf-token")) || session.getAttribute("csrf-token") == null)
+            {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             User user = (User) session.getAttribute("login");
             if (message.getSender() != user.getId() || user.getId() == message.getReceiver())
             {
@@ -66,11 +75,15 @@ public class MessageController
 
     @CrossOrigin()
     @PostMapping("/new/file/{sender}/{receiver}")
-    public ResponseEntity uploadFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam MultipartFile file, HttpSession session)
+    public ResponseEntity uploadFile(@PathVariable int sender, @PathVariable int receiver, @RequestParam MultipartFile file, HttpSession session, @RequestParam("csrf") String csrf)
     {
         try
         {
             User user = (User) session.getAttribute("login");
+            if(!csrf.equals(session.getAttribute("csrf-token")) || session.getAttribute("csrf-token") == null)
+            {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             if (receiver != user.getId() && sender != user.getId())
             {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -86,9 +99,13 @@ public class MessageController
 
     @CrossOrigin()
     @PostMapping("delete/file/{sender}/{receiver}/{filename}")
-    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @PathVariable String filename, HttpSession session){
+    public ResponseEntity deleteFile(@PathVariable int sender, @PathVariable int receiver, @PathVariable String filename, HttpSession session, @RequestParam String csrf){
         try
         {
+            if(!csrf.equals(session.getAttribute("csrf-token")) || session.getAttribute("csrf-token") == null)
+            {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             User user = (User) session.getAttribute("login");
             if (sender != user.getId() || user.getId() == receiver)
             {
